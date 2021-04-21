@@ -14,34 +14,42 @@ public class DogTypes {
 
     private DataSource dataSource;
 
-    public DogTypes(MariaDbDataSource dogs) {
-        this.dataSource = dogs;
+    public DogTypes(MariaDbDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 
-    public List<String> getDogsByCountry(String countryName){
-        List<String> dogs = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt =
-             conn.prepareStatement("select name from dog_types where country = ?"))
-        {
-            stmt.setString(1, countryName.toUpperCase());
-            try (ResultSet rs = stmt.executeQuery();)
-            {
-                while (rs.next()) {
-                    String name = rs.getString("name").toLowerCase();
-                    dogs.add(name);
-                }
-            if (dogs == null){
-                throw new IllegalArgumentException("No result");
-            }
-                return dogs;
+    public List<String> getDogsByCountry(String country) {
+        country = country.toUpperCase();
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt =
+                        conn.prepareStatement("SELECT name FROM dog_types WHERE country = ? ORDER BY NAME");
+        ) {
+            stmt.setString(1, country);
 
-            }
-        }   catch (SQLException sqle) {
-                throw new IllegalArgumentException("Error by insert", sqle);
-            }
+            return convertToNames(stmt);
+        } catch (SQLException sqle) {
+            throw new IllegalArgumentException("Error by insert", sqle);
+
         }
     }
+
+    public List<String> convertToNames(PreparedStatement stmt){
+        List<String> result = new ArrayList<>();
+        try (
+                ResultSet rs = stmt.executeQuery();
+        ) {
+            while (rs.next()) {
+                String name = rs.getString("name").toLowerCase();
+                result.add(name);
+            }
+        } catch (SQLException sqle) {
+            throw new IllegalArgumentException("Error by insert", sqle);
+        }
+        return result;
+    }
+}
+
 
 
