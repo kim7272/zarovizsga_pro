@@ -27,3 +27,4 @@ public class HuskyTest {
         assertEquals(12, husky.getHappiness());
     }
 }
+

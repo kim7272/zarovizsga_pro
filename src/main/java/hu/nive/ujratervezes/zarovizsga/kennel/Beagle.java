@@ -1,22 +1,22 @@
 package hu.nive.ujratervezes.zarovizsga.kennel;
 
-public class Beagle {
-    
-    public Beagle(String bigli) {
-        
+public class Beagle extends Dog {
+
+
+    public Beagle(String name) {
+        super(name);
     }
 
-    public String getName() {
-        
-    }
-
-    public int getHappiness() {
-        
-    }
-
+    @Override
     public void feed() {
+       setHappiness(2);
+
     }
 
-    public void play(int i) {
+    @Override
+    public void play(int hours) {
+        setHappiness(hours*2);
     }
 }
+
+

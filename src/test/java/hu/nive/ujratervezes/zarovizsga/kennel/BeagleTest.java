@@ -26,5 +26,4 @@ class BeagleTest {
         beagle.play(3);
         assertEquals(6, beagle.getHappiness());
     }
-
 }
